@@ -3,6 +3,7 @@
 
 #include "Opdrachten/Opdracht1.hpp"
 
+
 int main()
 {
     sf::RenderWindow window;
@@ -15,19 +16,25 @@ int main()
         return -1;
 
     sf::Clock deltaClock;
+
+    // - 30 x 30 Game of Life
     Opdracht1 game(30, 30);
+
+
 
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
         {
-            ImGui::SFML::ProcessEvent(window, *event);
+            ImGui::SFML::ProcessEvent(window,*event);
 
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
 
-        ImGui::SFML::Update(window,deltaClock.restart());
+
+        ImGui::SFML::Update(window,deltaClock.restart()
+        );
 
         game.update();
         window.clear(sf::Color::Black);
@@ -36,7 +43,7 @@ int main()
         window.display();
     }
 
-    ImGui::SFML::Shutdown();
 
+    ImGui::SFML::Shutdown();
     return 0;
 }
