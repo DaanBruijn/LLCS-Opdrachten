@@ -1,13 +1,13 @@
 #include "imgui-SFML.h"
 #include <SFML/Graphics.hpp>
 
-#include "Opdrachten/test.hpp"
+#include "Opdrachten/Opdracht1.hpp"
 
 int main()
 {
     sf::RenderWindow window;
 
-    window.create(sf::VideoMode({1280, 720}), "Opdracht 1");
+    window.create(sf::VideoMode({1280, 720}),"Conway's Game of Life");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
@@ -15,9 +15,7 @@ int main()
         return -1;
 
     sf::Clock deltaClock;
-
-    // - Rectangle test met  sliders
-    test test;
+    Opdracht1 game(30, 30);
 
     while (window.isOpen())
     {
@@ -29,18 +27,16 @@ int main()
                 window.close();
         }
 
-        // - Update
-        ImGui::SFML::Update(window, deltaClock.restart());
-        test.update();
+        ImGui::SFML::Update(window,deltaClock.restart());
 
-        // - Render
+        game.update();
         window.clear(sf::Color::Black);
-        test.render(window);
-
+        game.render(window);
         ImGui::SFML::Render(window);
         window.display();
     }
 
     ImGui::SFML::Shutdown();
+
     return 0;
 }
