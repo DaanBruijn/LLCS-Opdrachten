@@ -23,8 +23,10 @@ void Opdracht1::update()
     if (!running)
         return;
 
+    // - Houdt de tijd bij sins de vorige generatie
     updateTimer += 1.0f / 60.0f;
 
+    // - Bereken nieuwe geneartie
     if (updateTimer >= updateInterval)
     {
         updateTimer = 0.0f;
@@ -65,6 +67,7 @@ void Opdracht1::updateGrid()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
+    // - Bereken volgende generatie in appart grid zodat de huidige generatie niet veranderd
     for (auto rowIterator = grid.begin(); rowIterator != grid.end(); ++rowIterator)
     {
         const std::size_t y = std::distance(grid.begin(), rowIterator);
@@ -74,6 +77,7 @@ void Opdracht1::updateGrid()
             const std::size_t x = std::distance(rowIterator->begin(), cellIterator);
             const int neighbours = countNeighbours(x, y);
 
+            // - Pas de regels toe
             if (*cellIterator)
                 nextGrid[y][x] = neighbours == 2 || neighbours == 3;
             else
@@ -81,6 +85,7 @@ void Opdracht1::updateGrid()
         }
     }
 
+    // - Maak de nieuwe generatie de huidige generatie
     grid.swap(nextGrid);
     ++generation;
 
@@ -137,6 +142,7 @@ void Opdracht1::render(sf::RenderWindow& window) {
 
 void Opdracht1::reset()
 {
+    // - Clear allebei de grids
     for (auto& row : grid)
     {
         for (std::size_t i = 0; i < row.size(); ++i)
@@ -217,5 +223,11 @@ void Opdracht1::drawImGui()
     ImGui::BulletText("2 of 3 buren - cel blijft leven");
     ImGui::BulletText("Meer dan 3 buren - cell sterft");
     ImGui::BulletText("Precies 3 buren - cel wordt geboren");
+
+    ImGui::Separator();
+
+    ImGui::Text("Tekenen");
+    ImGui::BulletText("Linkermuis - Cel vullen");
+    ImGui::BulletText("Rechtermuis - Cel Legen");
     ImGui::End();
 }
