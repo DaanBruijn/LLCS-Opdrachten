@@ -38,8 +38,6 @@ int Opdracht1::countNeighbours(std::size_t x, std::size_t y) const
     int neighbours = 0;
 
     // - We controlleren  de 8 mogelijke buren rondom een cel
-
-
     for (int offsetY = -1; offsetY <= 1; ++offsetY)
     {
         for (int offsetX = -1; offsetX <= 1; ++offsetX)
@@ -97,6 +95,23 @@ void Opdracht1::render(sf::RenderWindow& window) {
     const float cellWidth = static_cast<float>(window.getSize().x) / static_cast<float>(width);
     const float cellHeight = static_cast<float>(window.getSize().y) / static_cast<float>(height);
 
+    // - Tekenen met de muis
+    if (!running)
+    {
+        const sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+
+        const std::size_t x = static_cast<std::size_t>(mousePosition.x / cellWidth);
+        const std::size_t y = static_cast<std::size_t>(mousePosition.y / cellHeight);
+
+        if (x < width && y < height)
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                grid[y][x] = true;
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+                grid[y][x] = false;
+        }
+    }
+
     sf::RectangleShape cell;
     cell.setFillColor(sf::Color::White);
 
@@ -108,17 +123,17 @@ void Opdracht1::render(sf::RenderWindow& window) {
         {
             const std::size_t x = std::distance(rowIterator->begin(), cellIterator);
 
-            // - Alleen de levende cellen maken
+            // - Alleen de levende  cellen maken
             if (!*cellIterator)
                 continue;
 
-
-            cell.setPosition({static_cast<float>(x) * cellWidth,static_cast<float>(y) * cellHeight});
-            cell.setSize({cellWidth - 1.0f,cellHeight - 1.0f});
+            cell.setPosition({static_cast<float>(x) * cellWidth, static_cast<float>(y) * cellHeight});
+            cell.setSize({cellWidth - 1.0f, cellHeight - 1.0f});
             window.draw(cell);
         }
     }
 }
+
 
 void Opdracht1::reset()
 {
