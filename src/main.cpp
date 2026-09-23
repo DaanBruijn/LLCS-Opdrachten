@@ -1,14 +1,12 @@
-#include "imgui-SFML.h"
 #include <SFML/Graphics.hpp>
+#include "imgui-SFML.h"
 
-#include "Opdrachten/Opdracht1.hpp"
-
+#include "Opdrachten/Opdracht2.hpp"
 
 int main()
 {
-    sf::RenderWindow window;
+    sf::RenderWindow window(sf::VideoMode({1280, 720}),"Spatial Hashing - Ball Collision");
 
-    window.create(sf::VideoMode({1280, 720}),"Conway's Game of Life");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
@@ -16,34 +14,29 @@ int main()
         return -1;
 
     sf::Clock deltaClock;
-
-    // - 30 x 30 Game of Life
-    Opdracht1 game(30, 30);
-
-
+    BallGame game;
 
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
         {
-            ImGui::SFML::ProcessEvent(window,*event);
+            ImGui::SFML::ProcessEvent(window, *event);
 
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
 
+        const sf::Time deltaTime = deltaClock.restart();
 
-        ImGui::SFML::Update(window,deltaClock.restart()
-        );
-
-        game.update();
+        ImGui::SFML::Update(window, deltaTime);
+        game.update(window.getSize(),deltaTime.asSeconds());
         window.clear(sf::Color::Black);
         game.render(window);
         ImGui::SFML::Render(window);
         window.display();
     }
 
-
     ImGui::SFML::Shutdown();
+
     return 0;
 }
