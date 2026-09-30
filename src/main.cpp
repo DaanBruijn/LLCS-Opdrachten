@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "imgui-SFML.h"
 
-#include "Opdrachten/Opdracht2.hpp"
+#include "Opdrachten/Opdracht3.hpp"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({1280, 720}),"Spatial Hashing - Ball Collision");
+    sf::RenderWindow window(sf::VideoMode({1280, 720}),"Concurrent Inventory");
 
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
@@ -14,7 +14,7 @@ int main()
         return -1;
 
     sf::Clock deltaClock;
-    BallGame game;
+    Opdracht3 opdracht;
 
     while (window.isOpen())
     {
@@ -29,9 +29,11 @@ int main()
         const sf::Time deltaTime = deltaClock.restart();
 
         ImGui::SFML::Update(window, deltaTime);
-        game.update(window.getSize(),deltaTime.asSeconds());
+
+        opdracht.update();
         window.clear(sf::Color::Black);
-        game.render(window);
+        opdracht.render();
+
         ImGui::SFML::Render(window);
         window.display();
     }
