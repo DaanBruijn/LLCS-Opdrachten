@@ -25,10 +25,13 @@ public:
     void render();
 
 private:
-    bool testDone = false;
-    bool testPassed = false;
+    void runThreadTest();
+
+    static constexpr std::size_t itemsPerThread = 1000;
+
     std::size_t expectedItems = 0;
     std::size_t actualItems = 0;
 
-    void runThreadTest();
+    bool testPassed = false;
+    bool testDone = false;
 };
