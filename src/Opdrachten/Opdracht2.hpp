@@ -55,11 +55,15 @@ private:
     float collisionTimeMs = 0.0f;
     float frameTimeMs = 0.0f;
 
+    std::size_t bruteForceTests = 0;
+    float bruteForceTimeMs = 0.0f;
+
     void createBalls(std::size_t amount);
     void rebuildSpatialHash();
     void updatePositions(float deltaTime,const sf::Vector2u& windowSize);
     void handleWallCollisions(const sf::Vector2u& windowSize);
     void handleBallCollisions();
+    void handleBallCollisionsBruteForce();
     void resolveCollision(Ball& ball1, Ball& ball2);
 
     Cell getCell(const sf::Vector2f& position) const;

@@ -26,7 +26,7 @@ std::size_t BallGame::CellHash::operator()(const Cell& cell) const
 // - Constructor
 BallGame::BallGame() : gen(rd()), velDist(-200.0f, 200.0f), colorDist(50, 255)
 {
-    createBalls(100);
+    createBalls(5000);
 }
 // - Ball generation
 void BallGame::createBalls(std::size_t amount)
@@ -75,22 +75,25 @@ void BallGame::rebuildSpatialHash()
 
 void BallGame::update(const sf::Vector2u& windowSize, float deltaTime)
 {
-    const auto frameStart = std::chrono::high_resolution_clock::now();
+    const auto frameStart = std::chrono::steady_clock::now();
 
     collisionTests = 0;
     collisionsResolved = 0;
 
     updatePositions(deltaTime, windowSize);
+
+    // - Spatial Hash opbouwen
     rebuildSpatialHash();
-    // - Collision detection
-    const auto collisionStart = std::chrono::high_resolution_clock::now();
+    // - Meet de Spatial Hash-methode
+    const auto spatialStart = std::chrono::steady_clock::now();
     handleBallCollisions();
 
-    const auto collisionEnd = std::chrono::high_resolution_clock::now();
-    collisionTimeMs = std::chrono::duration<float, std::milli>(collisionEnd - collisionStart).count();
+    const auto spatialEnd = std::chrono::steady_clock::now();
+    collisionTimeMs =std::chrono::duration<float, std::milli>(spatialEnd - spatialStart).count();
 
-    const auto frameEnd = std::chrono::high_resolution_clock::now();
-    frameTimeMs = std::chrono::duration<float, std::milli>(frameEnd - frameStart).count();
+    const auto frameEnd = std::chrono::steady_clock::now();
+    frameTimeMs =std::chrono::duration<float, std::milli>(frameEnd - frameStart).count();
+
     drawImGui();
 }
 
@@ -219,6 +222,64 @@ void BallGame::handleBallCollisions()
     }
 }
 
+void BallGame::handleBallCollisionsBruteForce()
+{
+    bruteForceTests = 0;
+
+    for (std::size_t i = 0; i < balls.size(); ++i)
+    {
+        for (std::size_t j = i + 1; j < balls.size(); ++j)
+        {
+            ++bruteForceTests;
+
+            Ball& ball1 = balls[i];
+            Ball& ball2 = balls[j];
+
+            const sf::Vector2f pos1 = ball1.shape.getPosition();
+            const sf::Vector2f pos2 = ball2.shape.getPosition();
+
+            const sf::Vector2f delta = pos2 - pos1;
+
+            const float distanceSquared =
+                delta.x * delta.x + delta.y * delta.y;
+
+            const float minDistance =
+                ball1.shape.getRadius() + ball2.shape.getRadius();
+
+            if (distanceSquared >= minDistance * minDistance)
+                continue;
+
+            if (distanceSquared <= 0.000001f)
+                continue;
+
+            const float distance = std::sqrt(distanceSquared);
+            const sf::Vector2f normal = delta / distance;
+            const float overlap = minDistance - distance;
+
+            const sf::Vector2f separation = normal * (overlap * 0.5f);
+
+            ball1.shape.setPosition(pos1 - separation);
+            ball2.shape.setPosition(pos2 + separation);
+
+            const sf::Vector2f relativeVelocity = ball2.velocity - ball1.velocity;
+            const float velocityAlongNormal = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
+
+            if (velocityAlongNormal >= 0.0f)
+                continue;
+
+            constexpr float restitution = 1.0f;
+            const float impulseMagnitude = -(1.0f + restitution) * velocityAlongNormal * 0.5f;
+
+            const sf::Vector2f impulse = impulseMagnitude * normal;
+
+            ball1.velocity -= impulse;
+            ball2.velocity += impulse;
+
+            ++collisionsResolved;
+        }
+    }
+}
+
 void BallGame::render(sf::RenderWindow& window) const
 {
     for (const auto& ball : balls)
@@ -227,24 +288,36 @@ void BallGame::render(sf::RenderWindow& window) const
     }
 }
 
+
 void BallGame::drawImGui()
 {
     ImGui::Begin("Spatial Hashing");
 
-    ImGui::Text("Ballen: %zu", balls.size()); // - Hehe balls size
-    ImGui::Text("Spatial hash cell: %.1f px", cellSize);
+    const std::size_t n = balls.size();
+    const std::size_t bruteForceCount = n > 1 ? n * (n - 1) / 2 : 0;
+
+    ImGui::Text("Ballen: %zu", n);
+    ImGui::Text("Celgrootte: %.1f px", cellSize);
     ImGui::Separator();
 
-    ImGui::Text("Collision tests/frame: %zu", collisionTests);
-    ImGui::Text("Collisions resolved: %zu", collisionsResolved);
-    ImGui::Separator();
+    ImGui::Text("Brute Force tests: %zu", bruteForceCount);
+    ImGui::Text("Spatial Hash tests: %zu", collisionTests);
+    ImGui::Text("Botsingen opgelost: %zu", collisionsResolved);
 
-    ImGui::Text("Collision time: %.3f ms", collisionTimeMs);
+    if (bruteForceCount > 0)
+    {
+        const double reduction =100.0 * ( 1.0 - static_cast<double>(collisionTests)/static_cast<double>(bruteForceCount));
+        ImGui::Text("Reductie controles: %.1f%%", reduction);
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Spatial Hash collision time: %.3f ms", collisionTimeMs);
     ImGui::Text("Physics frame time: %.3f ms", frameTimeMs);
 
     if (frameTimeMs > 0.0f)
-        ImGui::Text("Estimated physics FPS: %.1f",1000.0f / frameTimeMs);
-
+    {
+        ImGui::Text("Physics FPS: %.1f",1000.0f/frameTimeMs);
+    }
     ImGui::Separator();
 
     ImGui::Text("Aantal hash cells: %zu", spatialHash.size());
