@@ -138,18 +138,25 @@ void BallGame::handleWallCollisions(const sf::Vector2u& windowSize)
     }
 }
 
+
 void BallGame::handleBallCollisions()
 {
     for (std::size_t i = 0; i < balls.size(); ++i)
     {
-        const sf::Vector2f position = balls[i].shape.getPosition();
-        const Cell currentCell = getCell(position);
-
         for (int offsetY = -1; offsetY <= 1; ++offsetY)
         {
             for (int offsetX = -1; offsetX <= 1; ++offsetX)
             {
-                const Cell neighbourCell{currentCell.x + offsetX, currentCell.y + offsetY};
+                const sf::Vector2f pos1 =
+                    balls[i].shape.getPosition();
+
+                const Cell currentCell = getCell(pos1);
+
+                const Cell neighbourCell{
+                    currentCell.x + offsetX,
+                    currentCell.y + offsetY
+                };
+
                 const auto iterator = spatialHash.find(neighbourCell);
 
                 if (iterator == spatialHash.end())
@@ -160,17 +167,18 @@ void BallGame::handleBallCollisions()
                     if (j <= i)
                         continue;
 
-                    ++collisionTests;
-
                     Ball& ball1 = balls[i];
                     Ball& ball2 = balls[j];
 
                     const sf::Vector2f pos1 = ball1.shape.getPosition();
                     const sf::Vector2f pos2 = ball2.shape.getPosition();
+
                     const sf::Vector2f delta = pos2 - pos1;
 
                     const float distanceSquared = delta.x * delta.x + delta.y * delta.y;
+
                     const float minDistance = ball1.shape.getRadius() + ball2.shape.getRadius();
+                    ++collisionTests;
 
                     if (distanceSquared >= minDistance * minDistance)
                         continue;
@@ -180,25 +188,29 @@ void BallGame::handleBallCollisions()
 
                     const float distance = std::sqrt(distanceSquared);
                     const sf::Vector2f normal = delta / distance;
+
                     const float overlap = minDistance - distance;
-                    const sf::Vector2f separation = normal * (overlap * 0.5f);
 
-                    ball1.shape.setPosition(pos1 - separation);
-                    ball2.shape.setPosition(pos2 + separation);
+                    // - Correct the overlap regardless of velocity
+                    constexpr float correctionPercent = 0.8f;
+                    const sf::Vector2f correction = normal * (overlap * correctionPercent * 0.5f);
 
+                    ball1.shape.setPosition(pos1 - correction);
+                    ball2.shape.setPosition(pos2 + correction);
+
+                    // - Only apply an impulse if the balls approach
                     const sf::Vector2f relativeVelocity = ball2.velocity - ball1.velocity;
-
                     const float velocityAlongNormal = relativeVelocity.x * normal.x + relativeVelocity.y * normal.y;
 
-                    if (velocityAlongNormal > 0.0f)
+                    if (velocityAlongNormal >= 0.0f)
                         continue;
 
                     constexpr float restitution = 1.0f;
-                    const float impulse = -(1.0f + restitution) * velocityAlongNormal;
-                    const sf::Vector2f impulseVector = impulse * normal;
+                    const float impulseMagnitude = -(1.0f + restitution) * velocityAlongNormal * 0.5f;
+                    const sf::Vector2f impulse = impulseMagnitude * normal;
 
-                    ball1.velocity -= impulseVector;
-                    ball2.velocity += impulseVector;
+                    ball1.velocity -= impulse;
+                    ball2.velocity += impulse;
 
                     ++collisionsResolved;
                 }
