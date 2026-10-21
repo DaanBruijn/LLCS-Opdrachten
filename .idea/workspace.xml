@@ -64,9 +64,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2eb6494c-75ee-466e-8093-e29ee4bc1ba6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht3.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht3.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht3.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht3.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +114,7 @@
     "RunOnceActivity.west.config.association.type.startup.service": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "OPDR__ThreadSafe",
+    "git-widget-placeholder": "OPDR__ChatClient",
     "last_opened_file_path": "C:/HKU/Jaar 2/DEV - Low Level Computer Science/LLCS - Main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -125,6 +125,11 @@
   }
 }]]></component>
   <component name="RunManager" selected="CMake Application.low-level_setup">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Continuous" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="low-level_setup" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -271,11 +276,6 @@
       </method>
     </configuration>
     <configuration name="SheenBidi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="low-level_setup" TARGET_NAME="SheenBidi" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
