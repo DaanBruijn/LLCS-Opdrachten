@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "imgui-SFML.h"
 
-#include "Opdrachten/Opdracht3.hpp"
+#include "Opdrachten/Opdracht4.hpp"
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
         return -1;
 
     sf::Clock deltaClock;
-    Opdracht3 opdracht;
+    Opdracht4 opdracht;
 
     while (window.isOpen())
     {

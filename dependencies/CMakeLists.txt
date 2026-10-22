@@ -33,8 +33,8 @@ FetchContent_Declare(
 # BUILDING
 
 # SFML
-option(SFML_BUILD_AUDIO "Build audio" OFF)
-option(SFML_BUILD_NETWORK "Build network" OFF)
+set(SFML_BUILD_AUDIO OFF CACHE BOOL "Build audio" FORCE)
+set(SFML_BUILD_NETWORK ON CACHE BOOL "Build network" FORCE)
 FetchContent_MakeAvailable(sfml)
 
 # IMGUI
