@@ -2,6 +2,9 @@
 
 #include "Opdracht4Client.hpp"
 
+#include <string>
+#include <vector>
+
 class Opdracht4
 {
 public:
@@ -9,6 +12,8 @@ public:
     void render();
 
 private:
+    void addMessage(const std::string& message);
+
     Opdracht4Client client;
 
     char serverIp[64] = "127.0.0.1";
@@ -17,4 +22,6 @@ private:
     char messageInput[512] = "";
 
     bool connected = false;
+
+    std::vector<std::string> messages;
 };
