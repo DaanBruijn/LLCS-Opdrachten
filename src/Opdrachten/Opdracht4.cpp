@@ -8,11 +8,37 @@ void Opdracht4::update()
 
 void Opdracht4::render()
 {
-    ImGui::Begin("Opdracht 4 - Chat Client");
+    ImGui::Begin("Opdracht4 - Chat Client");
 
-    ImGui::Text("ChatClient word opgebouwt");
+    ImGui::Text("Verbindinginstellingen");
     ImGui::Separator();
 
-    ImGui::Text("Volgende stap - verbinden met de server");
+    ImGui::InputText("Server IP", serverIp, sizeof(serverIp));
+    ImGui::InputText("Poort", serverPort, sizeof(serverPort));
+    ImGui::InputText("Gebruikersnaam", username, sizeof(username));
+    ImGui::Spacing();
+
+    if (!connected)
+    {
+        if (ImGui::Button("Verbinden"))
+        {
+            // - TCP Verbinding
+        }
+    }
+    else
+    {
+        ImGui::Text("Status - Verbonden");
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Chatberichten verschijnen hier");
+
+    ImGui::InputText("Bericht", messageInput, sizeof(messageInput));
+    ImGui::SameLine();
+    if (ImGui::Button("Verstuur"))
+    {
+        // - Send
+    }
+
     ImGui::End();
 }
