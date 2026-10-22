@@ -1,9 +1,12 @@
 ﻿#pragma once
 
+#include "Opdracht4Protocol.hpp"
+
 #include <SFML/Network.hpp>
 
 #include <atomic>
 #include <cstdint>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -24,12 +27,22 @@ public:
     bool isRunning() const;
 
 private:
-    void acceptClients();
+    struct ClientInfo
+    {
+        std::unique_ptr<sf::TcpSocket> socket;
+        std::string username;
+    };
+
+    void run();
+
+    void processClientMessage(std::size_t clientIndex, const ChatMessage& message);
+    void broadcast(const ChatMessage& message, std::size_t excludedClient = static_cast<std::size_t>(-1));
 
     sf::TcpListener listener;
-    std::thread acceptThread;
+    std::thread serverThread;
 
     std::atomic<bool> running{false};
+
     std::mutex clientsMutex;
-    std::vector<std::unique_ptr<sf::TcpSocket>> clients;
+    std::vector<ClientInfo> clients;
 };

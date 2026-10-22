@@ -35,7 +35,7 @@ void Opdracht4::render()
                 }
                 else
                 {
-                    connected = client.connect(serverIp,static_cast<std::uint16_t>(port));
+                    connected = client.connect(serverIp, static_cast<std::uint16_t>(port), username);
                 }
             }
             catch (...)

@@ -2,28 +2,40 @@
 
 #include <iostream>
 
-bool Opdracht4Client::connect(const std::string& ip,std::uint16_t port)
+bool Opdracht4Client::connect(const std::string& ip, std::uint16_t port, const std::string& username)
 {
     if (connected)
         disconnect();
 
-    const auto addresses = sf::Dns::resolve(ip);
-    if (!addresses || addresses->empty())
+    const auto address = sf::IpAddress::resolve(ip);
+
+    if (!address)
     {
-        std::cerr << "Geen IP-adres gevonden voor: " << ip << '\n';
+        std::cerr << "Geen geldig IP-adres gevonden voor - " << ip << '\n';
         return false;
     }
 
-    const sf::Socket::Status status = socket.connect(addresses->front(), port, sf::seconds(3));
-    if (status != sf::Socket::Status::Done)
+    if (socket.connect(*address, port, sf::seconds(3)) != sf::Socket::Status::Done)
     {
-        std::cerr << "Verbinding met server mislukt " << ip << '-' << port << '\n';
+        std::cerr << "Verbinding mislukt\n";
         return false;
     }
 
+    socket.setBlocking(false);
     connected = true;
 
-    std::cout << "Verbonden met -" << ip << ':' << port << '\n';
+    ChatMessage joinMessage;
+    joinMessage.type = MessageType::Join;
+    joinMessage.username = username;
+
+    if (!sendMessage(joinMessage))
+    {
+        disconnect();
+        std::cerr << "Aanmelden bij de server mislukt\n";
+        return false;
+    }
+
+    std::cout << "Verbonden met " << ip << ' - ' << port << " als - " << username << '\n';
     return true;
 }
 
@@ -38,11 +50,54 @@ bool Opdracht4Client::isConnected() const
     return connected;
 }
 
-bool Opdracht4Client::sendMessage(const std::string& message)
+bool Opdracht4Client::sendMessage(const ChatMessage& message)
 {
     if (!connected)
         return false;
 
-    const sf::Socket::Status status = socket.send(message.c_str(), message.size());
-    return status == sf::Socket::Status::Done;
+    sf::Packet packet;
+    packet << message;
+
+    const sf::Socket::Status status = socket.send(packet);
+
+    if (status == sf::Socket::Status::Done)
+        return true;
+
+    if (status == sf::Socket::Status::Disconnected)
+        disconnect();
+
+    if (status == sf::Socket::Status::Partial)
+    {
+        std::cerr << "Pakket gedeeltelijk verstuurd\n";
+    }
+
+    return false;
+}
+
+bool Opdracht4Client::receiveMessage(ChatMessage& message)
+{
+    if (!connected)
+        return false;
+
+    sf::Packet packet;
+    const sf::Socket::Status status = socket.receive(packet);
+
+    if (status == sf::Socket::Status::Done)
+    {
+        if (!decodeMessage(packet, message))
+        {
+            std::cerr << "Ongeldig chatbericht ontvangen\n";
+            return false;
+        }
+
+        return true;
+    }
+
+    if (status == sf::Socket::Status::Disconnected)
+    {
+        disconnect();
+        std::cout << "verbindingg met de server verbroke...\n";
+    }
+
+    return false;
 }
