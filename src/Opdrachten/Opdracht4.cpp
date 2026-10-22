@@ -1,5 +1,8 @@
 ﻿#include "Opdracht4.hpp"
 #include <imgui.h>
+#include <cstdint>
+#include <string>
+
 
 void Opdracht4::update()
 {
@@ -22,7 +25,23 @@ void Opdracht4::render()
     {
         if (ImGui::Button("Verbinden"))
         {
-            // - TCP Verbinding
+            try
+            {
+                const int port = std::stoi(serverPort);
+
+                if (port < 1 || port > 65535)
+                {
+                    // - Ongeldige poort
+                }
+                else
+                {
+                    connected = client.connect(serverIp,static_cast<std::uint16_t>(port));
+                }
+            }
+            catch (...)
+            {
+                connected = false;
+            }
         }
     }
     else
