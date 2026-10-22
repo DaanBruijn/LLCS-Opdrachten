@@ -2,6 +2,7 @@
 #include "imgui-SFML.h"
 
 #include "Opdrachten/Opdracht4.hpp"
+#include "Opdrachten/Opdracht4Server.hpp"
 
 int main()
 {
@@ -15,6 +16,9 @@ int main()
 
     sf::Clock deltaClock;
     Opdracht4 opdracht;
+
+    Opdracht4Server server;
+    server.start(53000);
 
     while (window.isOpen())
     {
@@ -37,6 +41,8 @@ int main()
         ImGui::SFML::Render(window);
         window.display();
     }
+
+    server.stop();
 
     ImGui::SFML::Shutdown();
 
