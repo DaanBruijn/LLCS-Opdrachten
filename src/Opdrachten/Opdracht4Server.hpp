@@ -37,6 +37,7 @@ private:
 
     void processClientMessage(std::size_t clientIndex, const ChatMessage& message);
     void broadcast(const ChatMessage& message, std::size_t excludedClient = static_cast<std::size_t>(-1));
+    void broadcastUserList();
 
     sf::TcpListener listener;
     std::thread serverThread;

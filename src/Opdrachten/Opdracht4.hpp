@@ -25,4 +25,5 @@ private:
     bool connected = false;
 
     std::vector<std::string> messages;
+    std::vector<std::string> onlineUsers;
 };

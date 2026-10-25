@@ -1,10 +1,11 @@
 ﻿#include "Opdracht4.hpp"
 
 #include <imgui.h>
-
 #include <cstdint>
 #include <iostream>
 #include <string>
+#include <cctype>
+#include <functional>
 
 void Opdracht4::addMessage(const std::string& message)
 {
@@ -26,6 +27,7 @@ void Opdracht4::update()
     if (!client.isConnected())
     {
         connected = false;
+        onlineUsers.clear();
         return;
     }
 
@@ -48,6 +50,10 @@ void Opdracht4::update()
 
         case MessageType::Error:
             addMessage("[Error] " + message.text);
+            break;
+
+        case MessageType::UserList:
+            onlineUsers = message.users;
             break;
 
         default:
@@ -115,23 +121,71 @@ void Opdracht4::render()
         }
     }
 
-    ImGui::Separator();
-    ImGui::Text("Chatberichten");
 
-    if (ImGui::BeginChild("Chatgeschiedenis", ImVec2(0, 300), true))
+    ImGui::Separator();
+
+    // Twee panelen naast elkaar.
+    ImGui::BeginChild("OnlineGebruikers", ImVec2(220, 300), true);
+
+    ImGui::Text("Online (%d)", static_cast<int>(onlineUsers.size()));
+    ImGui::Separator();
+
+    for (const std::string& user : onlineUsers)
     {
-        for (const std::string& message : messages)
-        {
-            ImGui::TextWrapped("%s", message.c_str());
-        }
-        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-        {
-            ImGui::SetScrollHereY(1.0f);
-        }
+        // Bepaal een vaste kleur op basis van de gebruikersnaam.
+        const std::size_t hash = std::hash<std::string>{}(user);
+        const float hue = static_cast<float>(hash % 360) / 360.0f;
+        const ImU32 avatarColor = ImColor::HSV(hue, 0.65f, 0.90f);
+
+        const ImVec2 pos = ImGui::GetCursorScreenPos();
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+        // Teken de avatar.
+        drawList->AddCircleFilled(
+            ImVec2(pos.x + 10.0f, pos.y + 10.0f),
+            9.0f,
+            avatarColor
+        );
+
+        // Toon de eerste letter in de avatar.
+        const char initial = user.empty()
+            ? '?'
+            : static_cast<char>(
+                std::toupper(static_cast<unsigned char>(user[0]))
+              );
+
+        const std::string initialText(1, initial);
+
+        drawList->AddText(
+            ImVec2(pos.x + 6.0f, pos.y + 3.0f),
+            IM_COL32(255, 255, 255, 255),
+            initialText.c_str()
+        );
+
+        // Reserveer ruimte voor de avatar en zet de naam ernaast.
+        ImGui::Dummy(ImVec2(22.0f, 20.0f));
+        ImGui::SameLine();
+        ImGui::TextUnformatted(user.c_str());
     }
+
+    ImGui::EndChild();
+
+    ImGui::SameLine();
+    ImGui::BeginChild("Chatgeschiedenis", ImVec2(0, 300), true);
+    ImGui::Text("Chatberichten");
+    ImGui::Separator();
+
+    for (const std::string& message : messages)
+    {
+        ImGui::TextWrapped("%s", message.c_str());
+    }
+    if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+    {
+        ImGui::SetScrollHereY(1.0f);
+    }
+
     ImGui::EndChild();
     ImGui::Spacing();
-
     ImGui::InputText("Bericht", messageInput, sizeof(messageInput));
     ImGui::InputText("Ontvanger (leeg = openbaar)", recipientInput, sizeof(recipientInput));
 

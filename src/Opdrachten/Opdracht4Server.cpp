@@ -108,6 +108,7 @@ void Opdracht4Server::run()
                         event.text = username + " heeft de chat verlaten. Goodbye! - " + username;
 
                         broadcast(event);
+                        broadcastUserList();
                     }
 
                     std::cout << "Client disconnected\n";
@@ -161,6 +162,7 @@ void Opdracht4Server::processClientMessage(std::size_t clientIndex, const ChatMe
 
         std::cout << event.text << '\n';
         broadcast(event);
+        broadcastUserList();
 
         return;
     }
@@ -216,5 +218,39 @@ void Opdracht4Server::broadcast(const ChatMessage& message, std::size_t excluded
             continue;
 
         clients[i].socket->send(packet);
+    }
+}
+
+
+void Opdracht4Server::broadcastUserList()
+{
+    ChatMessage message;
+    message.type = MessageType::UserList;
+    message.username = "Server";
+
+    for (const ClientInfo& client : clients)
+    {
+        if (!client.username.empty())
+        {
+            message.users.push_back(client.username);
+        }
+    }
+
+    sf::Packet packet;
+    packet << message;
+
+    for (ClientInfo& client : clients)
+    {
+        if (client.username.empty())
+        {
+            continue;
+        }
+
+        const sf::Socket::Status status = client.socket->send(packet);
+
+        if (status != sf::Socket::Status::Done)
+        {
+            std::cerr << "Online gebruikersslijst versturen niet gelukt\n";
+        }
     }
 }

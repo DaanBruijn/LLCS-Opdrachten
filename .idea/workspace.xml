@@ -72,8 +72,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Client.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Client.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Protocol.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Protocol.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -404,7 +405,7 @@
       <workItem from="1789136420273" duration="307000" />
       <workItem from="1790179477461" duration="104000" />
       <workItem from="1790179762729" duration="3327000" />
-      <workItem from="1792937885950" duration="1507000" />
+      <workItem from="1792937885950" duration="3132000" />
     </task>
     <servers />
   </component>
