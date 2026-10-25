@@ -133,26 +133,32 @@ void Opdracht4::render()
     ImGui::Spacing();
 
     ImGui::InputText("Bericht", messageInput, sizeof(messageInput));
-    ImGui::SameLine();
+    ImGui::InputText("Ontvanger (leeg = openbaar)", recipientInput, sizeof(recipientInput));
 
-    if (ImGui::Button("Verstuur") && connected)
+    const bool sendClicked = ImGui::Button("Verstuur");
+    if (sendClicked && connected && messageInput[0] != '\0')
     {
-        if (messageInput[0] != '\0')
-        {
-            ChatMessage message;
-            message.type = MessageType::Chat;
-            message.text = messageInput;
+        ChatMessage message;
+        message.text = messageInput;
 
-            if (client.sendMessage(message))
-            {
-                messageInput[0] = '\0';
-            }
-            else
-            {
-                addMessage("[Fout] Bericht versturen mislukt... Womp Womp");
-            }
+        if (recipientInput[0] != '\0')
+        {
+            message.type = MessageType::PrivateMessage;
+            message.recipient = recipientInput;
+        }
+        else
+        {
+            message.type = MessageType::Chat;
+        }
+
+        if (client.sendMessage(message))
+        {
+            messageInput[0] = '\0';
+        }
+        else
+        {
+            addMessage("[Fout] Bericht versturen mislukt...");
         }
     }
-
     ImGui::End();
 }

@@ -4,20 +4,20 @@
 
 bool Opdracht4Client::connect(const std::string& ip, std::uint16_t port, const std::string& username)
 {
-    if (connected)
-        disconnect();
+    disconnect();
+    socket.setBlocking(true);
 
     const auto address = sf::IpAddress::resolve(ip);
 
     if (!address)
     {
-        std::cerr << "Geen geldig IP-adres gevonden voor - " << ip << '\n';
+        std::cerr << "Geen geldig IP adres gevonden voor- " << ip << '\n';
         return false;
     }
 
     if (socket.connect(*address, port, sf::seconds(3)) != sf::Socket::Status::Done)
     {
-        std::cerr << "Verbinding mislukt\n";
+        std::cerr << "Verbinding mislukt... Womp Womp\n";
         return false;
     }
 
@@ -31,18 +31,18 @@ bool Opdracht4Client::connect(const std::string& ip, std::uint16_t port, const s
     if (!sendMessage(joinMessage))
     {
         disconnect();
-        std::cerr << "Aanmelden bij de server mislukt\n";
+        std::cerr << "Aanmelden bij de server mislukt... Womp Womp\n";
         return false;
     }
 
-    std::cout << "Verbonden met " << ip << ' - ' << port << " als - " << username << '\n';
+    std::cout << "Verbonden met- " << ip << " op poort- " << port << " als- " << username << '\n';
     return true;
 }
 
 void Opdracht4Client::disconnect()
 {
-    socket.disconnect();
     connected = false;
+    socket.disconnect();
 }
 
 bool Opdracht4Client::isConnected() const

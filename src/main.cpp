@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "imgui-SFML.h"
 
 #include "Opdrachten/Opdracht4.hpp"
@@ -18,7 +19,12 @@ int main()
     Opdracht4 opdracht;
 
     Opdracht4Server server;
-    server.start(53000);
+    const bool isServer = server.start(53000);
+
+    if (!isServer)
+    {
+        std::cout << "Deze instantie draait alleen als client - Dubbel poort bug fixed\n";
+    }
 
     while (window.isOpen())
     {

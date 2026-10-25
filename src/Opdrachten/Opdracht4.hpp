@@ -20,6 +20,7 @@ private:
     char serverPort[16] = "53000";
     char username[32] = "Gebruiker";
     char messageInput[512] = "";
+    char recipientInput[32] = "";
 
     bool connected = false;
 
