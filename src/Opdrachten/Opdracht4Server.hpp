@@ -46,4 +46,6 @@ private:
 
     std::mutex clientsMutex;
     std::vector<ClientInfo> clients;
+
+    std::uint32_t nextMessageId = 1;
 };

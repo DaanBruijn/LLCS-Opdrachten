@@ -167,14 +167,38 @@ void Opdracht4Server::processClientMessage(std::size_t clientIndex, const ChatMe
         return;
     }
 
+
     if (client.username.empty())
         return;
+
+    if (message.type == MessageType::Typing)
+    {
+        ChatMessage outgoing = message;
+        outgoing.username = client.username;
+        outgoing.recipient.clear();
+
+        broadcast(outgoing, clientIndex);
+        return;
+    }
 
     if (message.type == MessageType::Chat)
     {
         ChatMessage outgoing = message;
         outgoing.username = client.username;
         outgoing.recipient.clear();
+        outgoing.messageId = nextMessageId++;
+        outgoing.replyToId = 0;
+
+        broadcast(outgoing);
+        return;
+    }
+
+    if (message.type == MessageType::Reply)
+    {
+        ChatMessage outgoing = message;
+        outgoing.username = client.username;
+        outgoing.recipient.clear();
+        outgoing.messageId = nextMessageId++;
 
         broadcast(outgoing);
         return;
@@ -184,6 +208,7 @@ void Opdracht4Server::processClientMessage(std::size_t clientIndex, const ChatMe
     {
         ChatMessage outgoing = message;
         outgoing.username = client.username;
+        outgoing.messageId = nextMessageId++;
 
         for (ClientInfo& recipient : clients)
         {
@@ -191,7 +216,13 @@ void Opdracht4Server::processClientMessage(std::size_t clientIndex, const ChatMe
             {
                 sf::Packet packet;
                 packet << outgoing;
-                recipient.socket->send(packet);
+
+                const sf::Socket::Status status = recipient.socket->send(packet);
+                if (status != sf::Socket::Status::Done)
+                {
+                    std::cerr << "Prive bericht versturen niet gelukt\n";
+                }
+
                 return;
             }
         }
@@ -199,7 +230,7 @@ void Opdracht4Server::processClientMessage(std::size_t clientIndex, const ChatMe
         ChatMessage error;
         error.type = MessageType::Error;
         error.username = "Server";
-        error.text = "Gebruiker niet gevonden - " + message.recipient;
+        error.text = "Gebruiker niet gevonden- " + message.recipient;
 
         sf::Packet packet;
         packet << error;

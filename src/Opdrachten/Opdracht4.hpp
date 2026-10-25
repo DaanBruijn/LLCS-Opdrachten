@@ -2,7 +2,10 @@
 
 #include "Opdracht4Client.hpp"
 
+#include <chrono>
+#include <cstdint>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 class Opdracht4
@@ -12,6 +15,15 @@ public:
     void render();
 
 private:
+    struct ChatEntry
+    {
+        std::uint32_t id = 0;
+        std::uint32_t replyToId = 0;
+        std::string username;
+        std::string text;
+        bool isPrivate = false;
+    };
+
     void addMessage(const std::string& message);
 
     Opdracht4Client client;
@@ -26,4 +38,12 @@ private:
 
     std::vector<std::string> messages;
     std::vector<std::string> onlineUsers;
+    std::vector<ChatEntry> chatEntries;
+
+    std::uint32_t replyToId = 0;
+
+    std::unordered_map<std::string, std::chrono::steady_clock::time_point > typingUsers;
+
+    bool lastTypingState = false;
+    std::chrono::steady_clock::time_point lastTypingSent{};
 };
