@@ -272,14 +272,15 @@ void Opdracht4::render()
         else if (entry.replyToId != 0)
             label = "[Antwoord] ";
 
-        label += entry.username + "- " + entry.text;
-        label += "##message" + std::to_string(entry.id);
+        label += entry.username + ": " + entry.text;
 
         const bool canReply = !entry.isPrivate && entry.id != 0;
 
         if (canReply)
         {
-            if (ImGui::Selectable(label.c_str(),replyToId == entry.id))
+            const std::string selectableId = label + "##message" + std::to_string(entry.id);
+
+            if (ImGui::Selectable(selectableId.c_str(), replyToId == entry.id))
                 replyToId = entry.id;
         }
         else
