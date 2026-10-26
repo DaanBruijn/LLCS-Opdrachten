@@ -71,10 +71,6 @@
     <list default="true" id="2eb6494c-75ee-466e-8093-e29ee4bc1ba6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Protocol.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Protocol.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Opdrachten/Opdracht4Server.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -405,7 +401,7 @@
       <workItem from="1789136420273" duration="307000" />
       <workItem from="1790179477461" duration="104000" />
       <workItem from="1790179762729" duration="3327000" />
-      <workItem from="1792937885950" duration="4734000" />
+      <workItem from="1792937885950" duration="7068000" />
     </task>
     <servers />
   </component>
